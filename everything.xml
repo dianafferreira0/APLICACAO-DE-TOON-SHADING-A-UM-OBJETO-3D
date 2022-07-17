@@ -1,0 +1,138 @@
+<?xml version="1.0" ?>
+<project name="Trabalho_CG" width=1024 height=512>
+	<assets>
+		<attributes>
+			<attribute type="COLOR" name="outlineColoration" data="VEC4" x = 0.0 y = 0.0 z = 0.0 />
+			<attribute type="COLOR" name="litoutlinethickness" data="FLOAT" value = 0.3 />
+			<attribute type="COLOR" name="unlitoutlinethickness" data="FLOAT" value = 0.3 />
+		</attributes>
+		<scenes>
+			<scene name="flower1" param="UNITIZE SWAP_YZ">
+				<file name="models/PEACE_LILLY_5K.obj"/>
+			</scene>
+		</scenes>
+
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<TYPE value="PERSPECTIVE"/>
+				<POSITION x=0 y=0 z=3 />
+				<VIEW x=0 y=0 z=-1.0 />
+				<NEAR value=0.01/>
+				<FAR value=10/>
+			</camera>
+		</cameras>
+
+		<lights>
+			<light name="Sun">
+				<DIRECTION x=-2 y=-1 z=-2 />
+			</light>
+		</lights>
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+			<viewport name="LeftViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+                <ORIGIN  x="0" y="0" />
+                <SIZE width=".5"  height="1.0" />
+			</viewport>
+   			<viewport name="RightViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+                <ORIGIN  x="0.5" y="0" />
+                <SIZE width=".5"  height="1.0" />
+			</viewport>
+		</viewports>
+	
+		<materialLibs>
+			<materialLib filename="everything.mlib" />
+		</materialLibs>
+
+	</assets>
+	
+	<pipelines>
+		
+		<pipeline name="textures" >
+			<pass class="default" name="texture" >
+				<scenes>
+					<scene name="flower1" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="*" toMaterial="textured" toLibrary="All" />
+				</materialMaps>	
+			</pass>
+		</pipeline>
+
+		<pipeline name="toon" default="true">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene name="flower1" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial ="toonPerVertex" fromLibrary="All" />
+					</map>
+				</injectionMaps>
+			</pass>
+		</pipeline>
+
+		<pipeline name="lighting" default="true">
+			<pass class="default" name="pass2">
+				<scenes>
+					<scene name="flower1" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial ="toonPerPixel" fromLibrary="All" />
+					</map>
+				</injectionMaps>
+			</pass>
+		</pipeline>
+
+			<pipeline name="shine" >
+			<pass class="default" name="pass3" >
+				<scenes>
+					<scene name="flower1" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="*" toMaterial="shininess" toLibrary="All" />
+				</materialMaps>	
+			</pass>
+		</pipeline>
+	</pipelines>
+
+	<interface>
+		<window label="Plantinha">
+
+            <pipelineList label="Operator" />
+
+			 <var label="shininess" type="COLOR" context="All::shininess"
+			     component="SHININESS" def="min=0.0 max=128.0" />
+
+			 <var label="outlineColor" type="COLOR" context="All::shininess"
+			     component="outlineColoration" def="min=0.0 max=1.0" />
+			 
+			 <var label="_LitOutlineThickness" type="COLOR" context="All::shininess"
+			     component="litoutlinethickness" def="min=0.0 max=1.0" />
+				 
+			 <var label="_UnlitOutlineThickness" type="COLOR" context="All::shininess"
+			     component="unlitoutlinethickness" def="min=0.0 max=1.0" />
+		</window>	
+	</interface>	
+</project>
